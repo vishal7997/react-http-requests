@@ -6,6 +6,7 @@ import axios from "axios";
 
 function App() {
   let [showForm, setShowForm] = useState(false);
+  let [users, setUsers] = useState([]);
 
   function addUserHandler() {
     setShowForm(true);
@@ -41,15 +42,62 @@ function App() {
       });
   }
 
+  function fetchUsers() {
+    // fetch(
+    //   "https://react-http-tutorial-7f40e-default-rtdb.firebaseio.com/users.json"
+    //   // { // if we dont specify second parameter to fetch api, by default it will work as a GET api.
+    //   //   method: "GET",
+    //   //   headers: {
+    //   //     "content-type": "application/json",
+    //   //   },
+    //   // }
+    // )
+    //   .then((resp) => {
+    //     return resp.json();
+    //   })
+    //   .then((data) => {
+    //     let userData = [];
+    //     for (let key in data) {
+    //       userData.push({ ...data[key], id: key });
+    //     }
+    //     // console.log(userData);
+    //     setUsers(userData);
+    //   });
+
+    axios
+      .get(
+        "https://react-http-tutorial-7f40e-default-rtdb.firebaseio.com/users.json"
+        // { // if we dont specify second parameter to fetch api, by default it will work as a GET api.
+        //   method: "GET",
+        //   headers: {
+        //     "content-type": "application/json",
+        //   },
+        // }
+      )
+      .then((resp) => {
+        return resp.data;
+      })
+      .then((data) => {
+        let userData = [];
+        for (let key in data) {
+          userData.push({ ...data[key], id: key });
+        }
+        // console.log(userData);
+        setUsers(userData);
+      });
+  }
+
   return (
     <div>
       <div className="page-header">
         <button className="btn btn-success" onClick={addUserHandler}>
           Add User
         </button>
-        <button className="btn btn-normal">Get Users</button>
+        <button className="btn btn-normal" onClick={fetchUsers}>
+          Get Users
+        </button>
       </div>
-      <UserDetails></UserDetails>
+      <UserDetails users={users}></UserDetails>
       {showForm && (
         <UserForm closeForm={closeForm} onCreateUser={onCreateUser}></UserForm>
       )}
