@@ -3,10 +3,12 @@ import UserForm from "./Components/UserForm";
 import "./App.css";
 import UserDetails from "./Components/UserDetails";
 import axios from "axios";
+import Loader from "./Components/Loader";
 
 function App() {
   let [showForm, setShowForm] = useState(false);
   let [users, setUsers] = useState([]);
+  let [loading, setLoading] = useState(false);
 
   function addUserHandler() {
     setShowForm(true);
@@ -64,6 +66,7 @@ function App() {
     //     setUsers(userData);
     //   });
 
+    setLoading(true);
     axios
       .get(
         "https://react-http-tutorial-7f40e-default-rtdb.firebaseio.com/users.json"
@@ -84,6 +87,7 @@ function App() {
         }
         // console.log(userData);
         setUsers(userData);
+        setLoading(false);
       });
   }
 
@@ -97,7 +101,8 @@ function App() {
           Get Users
         </button>
       </div>
-      <UserDetails users={users}></UserDetails>
+      {!loading && <UserDetails users={users}></UserDetails>}
+      {loading && <Loader></Loader>}
       {showForm && (
         <UserForm closeForm={closeForm} onCreateUser={onCreateUser}></UserForm>
       )}
