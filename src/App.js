@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import UserForm from "./Components/UserForm";
 import "./App.css";
 import UserDetails from "./Components/UserDetails";
@@ -9,6 +9,10 @@ function App() {
   let [showForm, setShowForm] = useState(false);
   let [users, setUsers] = useState([]);
   let [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   function addUserHandler() {
     setShowForm(true);
@@ -41,6 +45,8 @@ function App() {
       )
       .then((response) => {
         console.log(response.data);
+        fetchUsers();
+        setShowForm(false);
       });
   }
 
