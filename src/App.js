@@ -11,7 +11,7 @@ function App() {
   let [loading, setLoading] = useState(false);
   let [errorMessage, setErrorMessage] = useState(null);
   let [editMode, setEditMode] = useState(false);
-  let [user, setUser] = useState(null);
+  let [userToEdit, setUser] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -27,31 +27,51 @@ function App() {
   }
 
   function onCreateUser(user) {
-    // one way to use HTTP requests in react
-    // fetch(
-    //   "https://react-http-tutorial-7f40e-default-rtdb.firebaseio.com/users.json",
-    //   {
-    //     method: "POST",
-    //     body: JSON.stringify(user),
-    //     headers: {
-    //       "content-type": "application/json",
-    //     },
-    //   }
-    // ).then((resp) => {
-    //   console.log(resp);
-    // });
+    if (!editMode) {
+      // one way to use HTTP requests in react
+      // fetch(
+      //   "https://react-http-tutorial-7f40e-default-rtdb.firebaseio.com/users.json",
+      //   {
+      //     method: "POST",
+      //     body: JSON.stringify(user),
+      //     headers: {
+      //       "content-type": "application/json",
+      //     },
+      //   }
+      // ).then((resp) => {
+      //   console.log(resp);
+      // });
 
-    // another way to use HTTP requests in react : using AXIOS library
-    axios
-      .post(
-        "https://react-http-tutorial-7f40e-default-rtdb.firebaseio.com/users.json",
-        user
-      )
-      .then((response) => {
-        console.log(response.data);
-        fetchUsers();
-        setShowForm(false);
-      });
+      // another way to use HTTP requests in react : using AXIOS library
+      axios
+        .post(
+          "https://react-http-tutorial-7f40e-default-rtdb.firebaseio.com/users.json",
+          user
+        )
+        .then((response) => {
+          console.log(response.data);
+          fetchUsers();
+          setShowForm(false);
+        });
+    } else {
+      console.log(user);
+      console.log(userToEdit);
+      axios
+        .put(
+          "https://react-http-tutorial-7f40e-default-rtdb.firebaseio.com/users/" +
+            userToEdit.id +
+            ".json",
+          user
+        )
+        .then((response) => {
+          console.log(response);
+          fetchUsers();
+          setShowForm(false);
+        })
+        .catch((error) => {
+          setErrorMessage(error.message);
+        });
+    }
   }
 
   function fetchUsers() {
@@ -141,7 +161,7 @@ function App() {
           closeForm={closeForm}
           onCreateUser={onCreateUser}
           editMode={editMode}
-          user={user}
+          user={userToEdit}
         ></UserForm>
       )}
     </div>
