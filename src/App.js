@@ -10,12 +10,15 @@ function App() {
   let [users, setUsers] = useState([]);
   let [loading, setLoading] = useState(false);
   let [errorMessage, setErrorMessage] = useState(null);
+  let [editMode, setEditMode] = useState(false);
+  let [user, setUser] = useState(null);
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
   function addUserHandler() {
+    setEditMode(false);
     setShowForm(true);
   }
 
@@ -56,7 +59,7 @@ function App() {
     setErrorMessage(null);
 
     fetch(
-      "https://react-http-tutorial-7f40e-default-rtdb.firebaseio.com/users.xml"
+      "https://react-http-tutorial-7f40e-default-rtdb.firebaseio.com/users.json"
       // { // if we dont specify second parameter to fetch api, by default it will work as a GET api.
       //   method: "GET",
       //   headers: {
@@ -77,6 +80,7 @@ function App() {
         }
         // console.log(userData);
         setUsers(userData);
+        setLoading(false);
       })
       .catch((error) => {
         setErrorMessage(error.message);
@@ -111,6 +115,12 @@ function App() {
     //   });
   }
 
+  function onEditUser(user) {
+    setEditMode(true);
+    setUser(user);
+    setShowForm(true);
+  }
+
   return (
     <div>
       <div className="page-header">
@@ -121,11 +131,18 @@ function App() {
           Get Users
         </button>
       </div>
-      {!loading && !errorMessage && <UserDetails users={users}></UserDetails>}
+      {!loading && !errorMessage && (
+        <UserDetails users={users} onEditUser={onEditUser}></UserDetails>
+      )}
       {errorMessage && <h3 style={{ textAlign: "center" }}>{errorMessage}</h3>}
       {loading && <Loader></Loader>}
       {showForm && (
-        <UserForm closeForm={closeForm} onCreateUser={onCreateUser}></UserForm>
+        <UserForm
+          closeForm={closeForm}
+          onCreateUser={onCreateUser}
+          editMode={editMode}
+          user={user}
+        ></UserForm>
       )}
     </div>
   );

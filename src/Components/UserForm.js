@@ -38,24 +38,56 @@ function UserForm(props) {
           <div className="user-form">
             <form onSubmit={onCreateUser}>
               <div>
-                <input type="text" placeholder="First name" ref={fnameRef} />
-                <input type="text" placeholder="Last name" ref={lnameRef} />
+                <input
+                  type="text"
+                  placeholder="First name"
+                  ref={fnameRef}
+                  defaultValue={props.editMode ? props.user.firstName : ""}
+                />
+                <input
+                  type="text"
+                  placeholder="Last name"
+                  ref={lnameRef}
+                  defaultValue={props.editMode ? props.user.lastName : ""}
+                />
               </div>
               <div>
-                <input type="email" placeholder="Email" ref={emailRef} />
+                <input
+                  type="email"
+                  placeholder="Email"
+                  ref={emailRef}
+                  defaultValue={props.editMode ? props.user.email : ""}
+                />
               </div>
               <div>
-                <input type="password" placeholder="Password" ref={pswdRef} />
-                <input type="password" placeholder="Confirm Password" />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  ref={pswdRef}
+                  defaultValue={props.editMode ? props.user.password : ""}
+                />
+                <input
+                  type="password"
+                  placeholder="Confirm Password"
+                  defaultValue={props.editMode ? props.user.password : ""}
+                />
               </div>
               <div>
-                <select name="country" ref={countryRef}>
+                <select
+                  name="country"
+                  ref={countryRef}
+                  defaultValue={props.editMode ? props.user.country : ""}
+                >
                   <option value="India">India</option>
                   <option value="Germany">Germany</option>
                   <option value="USA">USA</option>
                   <option value="UK">UK</option>
                 </select>
-                <select name="city" ref={cityRef}>
+                <select
+                  name="city"
+                  ref={cityRef}
+                  defaultValue={props.editMode ? props.user.city : ""}
+                >
                   <option value="Delhi">Delhi</option>
                   <option value="Berlin">Berlin</option>
                   <option value="New York">New York</option>
@@ -63,14 +95,25 @@ function UserForm(props) {
                 </select>
               </div>
               <div>
-                <input type="date" placeholder="Date of Birth" ref={dateRef} />
-                <select name="gender" ref={genderRef}>
+                <input
+                  type="date"
+                  placeholder="Date of Birth"
+                  ref={dateRef}
+                  defaultValue={props.editMode ? props.user.dob : ""}
+                />
+                <select
+                  name="gender"
+                  ref={genderRef}
+                  defaultValue={props.editMode ? props.user.gender : ""}
+                >
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
                   <option value="Unknown">Unknown</option>
                 </select>
               </div>
-              <button className="add-user-button">Create User</button>
+              <button className="add-user-button">
+                {props.editMode ? "Update User" : "Create User"}
+              </button>
             </form>
           </div>
         </div>
