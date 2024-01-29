@@ -51,7 +51,7 @@ function App() {
         .then((response) => {
           console.log(response.data);
           fetchUsers();
-          setShowForm(false);
+          // setShowForm(false);
         });
     } else {
       console.log(user);
@@ -66,12 +66,13 @@ function App() {
         .then((response) => {
           console.log(response);
           fetchUsers();
-          setShowForm(false);
+          // setShowForm(false);
         })
         .catch((error) => {
           setErrorMessage(error.message);
         });
     }
+    setShowForm(false);
   }
 
   function fetchUsers() {
@@ -141,6 +142,31 @@ function App() {
     setShowForm(true);
   }
 
+  function onDeleteUser(user) {
+    let del = window.confirm(
+      "Do you really want to delete the record of " +
+        user.firstName +
+        " " +
+        user.lastName +
+        "?"
+    );
+    if (del) {
+      axios
+        .delete(
+          "https://react-http-tutorial-7f40e-default-rtdb.firebaseio.com/users/" +
+            user.id +
+            ".json"
+        )
+        .then((response) => {
+          console.log(response);
+          fetchUsers();
+        })
+        .catch((error) => {
+          setErrorMessage(error.message);
+        });
+    }
+  }
+
   return (
     <div>
       <div className="page-header">
@@ -152,7 +178,11 @@ function App() {
         </button>
       </div>
       {!loading && !errorMessage && (
-        <UserDetails users={users} onEditUser={onEditUser}></UserDetails>
+        <UserDetails
+          users={users}
+          onEditUser={onEditUser}
+          onDeleteUser={onDeleteUser}
+        ></UserDetails>
       )}
       {errorMessage && <h3 style={{ textAlign: "center" }}>{errorMessage}</h3>}
       {loading && <Loader></Loader>}
