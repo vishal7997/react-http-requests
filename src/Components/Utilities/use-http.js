@@ -8,7 +8,7 @@ function useHttp() {
       url,
       {
         method: method,
-        body: JSON.stringify(body),
+        body: body ? JSON.stringify(body) : null
       }
     )
       .then((response) => {

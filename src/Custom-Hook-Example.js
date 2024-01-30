@@ -1,59 +1,46 @@
 import React, { useEffect, useRef, useState } from "react";
+import useHttp from "./Components/Utilities/use-http";
 // import Increment from "./Components/Increment";
 // import Decrement from "./Components/Decrement";
 
 function CustomHookExample() {
   let taskRef = useRef();
-  let [allTasks, setAllTasks] = useState([]);
   let [errorMessage, setErrorMessage] = useState(null);
+  let [allTasks, setAllTasks] = useState([]);
+  let [errorGet, sendGetRequest] = useHttp(
+    "https://react-http-tutorial-7f40e-default-rtdb.firebaseio.com/tasks.json",
+    "GET",
+    null,
+    getAllTasks
+  );
+
+  let [errorPost, sendPostRequest] = useHttp(
+    "https://react-http-tutorial-7f40e-default-rtdb.firebaseio.com/tasks.json",
+    "POST",
+    taskRef.current.value,
+    createTask
+  );
+
+  function getAllTasks(data) {
+    data.then((tasks) => {
+      let taskList = [];
+      for (let key in tasks) {
+        taskList.push({ id: key, value: tasks[key] });
+      }
+      // console.log(tasks);
+      setAllTasks(taskList);
+    });
+    setErrorMessage(errorGet);
+  }
 
   useEffect(() => {
-    fetchTask();
+    sendGetRequest();
   }, []);
 
   // CREATE A NEW TASK
-  function createTask() {
-    fetch(
-      "https://react-http-tutorial-7f40e-default-rtdb.firebaseio.com/tasks.json",
-      {
-        method: "POST",
-        body: JSON.stringify(taskRef.current.value),
-      }
-    )
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Something went wrong. Please try again later.");
-        }
-
-        fetchTask();
-      })
-      .catch((error) => {
-        setErrorMessage(error.message);
-      });
-  }
-
-  //   FETCH ALL TASK
-  function fetchTask() {
-    fetch(
-      "https://react-http-tutorial-7f40e-default-rtdb.firebaseio.com/tasks.json"
-    )
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Something went wrong. Please try again later.");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        let tasks = [];
-        for (let key in data) {
-          tasks.push({ id: key, value: data[key] });
-        }
-        setAllTasks(tasks);
-        console.log(tasks);
-      })
-      .catch((error) => {
-        setErrorMessage(error.message);
-      });
+  function createTask(data) {
+    sendPostRequest();
+    sendGetRequest();
   }
 
   //   DELETE A TASK
@@ -70,7 +57,7 @@ function CustomHookExample() {
         if (!response.ok) {
           throw new Error("Something went wrong. Please try again later.");
         }
-        fetchTask();
+        // fetchTask();
       })
       .catch((error) => {
         setErrorMessage(error.message);
