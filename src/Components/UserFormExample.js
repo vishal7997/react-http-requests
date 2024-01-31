@@ -3,6 +3,7 @@ import "./UserForm.css";
 
 function UserFormExample() {
   let [firstName, setFirstName] = useState("");
+  let [fnameIsValid, setFnameIsValid] = useState(true);
   let fNameRef = useRef();
 
   function onFNameChanged(event) {
@@ -14,13 +15,19 @@ function UserFormExample() {
 
     // Reset input values on form submit
 
-    // first approach - ideal
-    // console.log(firstName);
-    // setFirstName("");
+    if (firstName.trim() === "") {
+      setFnameIsValid(false);
+      return;
+    }
+    setFnameIsValid(true);
 
-    // another approach - not ideal
-    console.log(fNameRef.current.value);
-    fNameRef.current.value = "";
+    // first approach - ideal
+    console.log(firstName);
+    setFirstName("");
+
+    // // another approach - not ideal
+    // console.log(fNameRef.current.value);
+    // fNameRef.current.value = "";
   }
 
   return (
@@ -41,6 +48,11 @@ function UserFormExample() {
                   ref={fNameRef}
                   value={firstName}
                 />
+                {!fnameIsValid && (
+                  <div style={{ fontSize: 14, color: "red" }}>
+                    <p>First name is required field</p>
+                  </div>
+                )}
                 <input type="text" placeholder="Last name" />
               </div>
               <div>
